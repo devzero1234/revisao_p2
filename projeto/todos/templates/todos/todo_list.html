@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Tarefas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Tarefas</h2>
+  <a href="{% url 'todo_create' %}" class="btn btn-primary">Nova Tarefa</a>
+</div>
+
+<div class="mb-3">
+  <a href="?status=active" class="btn btn-outline-secondary btn-sm">Ativas</a>
+  <a href="?status=completed" class="btn btn-outline-secondary btn-sm">Concluídas</a>
+  <a href="?" class="btn btn-outline-secondary btn-sm">Todas</a>
+  <a href="?order=due_date" class="btn btn-outline-info btn-sm">Ordenar por Data</a>
+  <a href="?order=priority" class="btn btn-outline-info btn-sm">Ordenar por Prioridade</a>
+</div>
+
+<ul class="list-group">
+  {% for todo in todos %}
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <div>
+      <strong {% if todo.completed %}style="text-decoration: line-through;"{% endif %}>{{ todo.title }}</strong>
+      {% if todo.due_date %}
+        <small class="text-muted"> - até {{ todo.due_date }}</small>
+      {% endif %}
+      {% if todo.completed %}
+        <span class="badge bg-success">Concluída</span>
+      {% endif %}
+    </div>
+    <div>
+      <a href="{% url 'todo_toggle' todo.id %}" class="btn btn-sm btn-outline-secondary me-1">✔️</a>
+      <a href="{% url 'todo_update' todo.id %}" class="btn btn-sm btn-warning me-1">Editar</a>
+      <a href="{% url 'todo_delete' todo.id %}" class="btn btn-sm btn-danger">Excluir</a>
+    </div>
+  </li>
+  {% empty %}
+  <li class="list-group-item text-muted">Nenhuma tarefa cadastrada.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
